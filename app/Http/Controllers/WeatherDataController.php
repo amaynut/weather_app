@@ -7,6 +7,7 @@ use DateTime;
 use Illuminate\Http\JsonResponse;
 use App\Models\WeatherData;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Request;
 
 class WeatherDataController extends Controller
 {
@@ -14,18 +15,25 @@ class WeatherDataController extends Controller
     const BASE_URL = "http://api.weatherapi.com/v1/current.json";
     const API_KEY = "ffa3962c2e24428fae7174522221301";
 
-    public function fetch()
+    /**
+     * @return JsonResponse
+     */
+    public function fetch(Request $request)
     {
+        $locationParam = $request->get('location');
+        // validate location
+        $location = Location::where('name', '=',$locationParam)->firstOrFail();
+
+        // fetch the data from the API
         $response = Http::get(self::BASE_URL, [
             'key' => self::API_KEY,
-            'q' => 'Montreal',
+            'q' => $locationParam,
         ]);
 
         $currentWeather = json_decode($response->body(), true)['current'];
 
+        // build and  save the model
         $weatherData = new WeatherData();
-        $location = Location::where('name', '=','Montreal')->firstOrFail();
-
         $weatherData->last_updated_epoch = DateTime::createFromFormat( 'U', $currentWeather['last_updated_epoch'])->format('c');
         $weatherData->location_id = $location->id;
         $weatherData->last_updated = $currentWeather['last_updated'];
@@ -53,8 +61,7 @@ class WeatherDataController extends Controller
 
         $weatherData->save();
 
+        // return the saved data
         return new JsonResponse($weatherData, JsonResponse::HTTP_OK);
-
-
     }
 }
