@@ -74,7 +74,19 @@ collate=utf8mb4_unicode_ci;
 ```
 
 ### fetch the API data and store it
-`yes`
+`docker-compose exec -it weather_app_laravel.test_1 php artisan weather:store Montreal`
+
+### setup a cronjob 
+Install cron and vim inside the container
+`docker-compose exec -it weather_app_laravel.test_1 apt update && apt install cron vim`
+Schedule the cron to run every 30 minutes
+Run `docker-compose exec -it weather_app_laravel.test_1 crontab -e`
+Then add : `*/30 * * * * php artisan weather:store Montreal`
+
+### fetch the data manually through an API end-point
+call `http://localhost/api/weather/fetch?location=Montreal`
+
+
  
 
 
