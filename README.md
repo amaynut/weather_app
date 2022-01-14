@@ -1,30 +1,32 @@
 ## Description
-Web service that fetches current weather data from https://www.weatherapi.com and store it in the DB
+Web service that fetches current weather data from https://www.weatherapi.com and store it in the DB \
 The app is based on `Laravel 8`
 
 ## Installation
 ### Clone the repo
 `git clone https://github.com/amaynut/weather_app.git`
+
+cd to the cloned repo
 `cd weather app`
 ### install the composer packages
 `composer install`
 ### spin up docker containers
-The app is shipped with 2 containers: a mysql container and a php 8 container (ubuntu 21.4)
-Run : `bash ./vendor/bin/sail up` on Windows
-or : `./vendor/bin/sail up` on Unix (Linux or Mac OS)
+The app is shipped with 2 containers: a mysql container and a php 8 container (ubuntu 21.4)\
+Run : `bash ./vendor/bin/sail up` on Windows\
+or : `./vendor/bin/sail up` on Unix (Linux or Mac OS)\
 ### config
-The config file is `.env` and it is committed for testing purposes 
-The DB credentials are
+The config file is `.env` and it is committed for testing purposes\
+The DB credentials are\
 ```sh
 DB_DATABASE=weather_app
 DB_USERNAME=sail
 DB_PASSWORD=password
 ```
 ### migrate the DB
-The db has two tables `weather_data` (stores the historical weather data) and `locations` (stores the cities)
-The follow command should create the 2 table and seed the locations table with Montreal data as an example
-`docker-compose exec -it weather_app_laravel.test_1 php artisan migrate --seed`
-Locations table
+The db has two tables `weather_data` (stores the historical weather data) and `locations` (stores the cities)\
+The follow command should create the 2 table and seed the locations table with Montreal data as an example\
+`docker-compose exec -it weather_app_laravel.test_1 php artisan migrate --seed` \
+Locations table \
 ```sql
 create table locations
 (
@@ -85,14 +87,14 @@ collate=utf8mb4_unicode_ci;
 `docker-compose exec -it weather_app_laravel.test_1 php artisan weather:store Montreal`
 
 ### setup a cronjob 
-Install cron and vim inside the container
+Install cron and vim inside the container\
 `docker-compose exec -it weather_app_laravel.test_1 apt update && apt install cron vim`
-Schedule the cron to run every 30 minutes
-Run `docker-compose exec -it weather_app_laravel.test_1 crontab -e`
-Then add : `*/30 * * * * php artisan weather:store Montreal`
+Schedule the cron to run every 30 minutes\
+Run `docker-compose exec -it weather_app_laravel.test_1 crontab -e` \
+Then add : `*/30 * * * * php artisan weather:store Montreal` 
 
 ### fetch the data manually through an API end-point
-call `http://localhost/api/weather/fetch?location=Montreal`
+call `http://localhost/api/weather/fetch?location=Montreal` 
 Example response 
 ```json
 {
