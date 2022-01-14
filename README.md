@@ -12,6 +12,14 @@ The app is based on `Laravel 8`
 The app is shipped with 2 containers: a mysql container and a php 8 container (ubuntu 21.4)
 Run : `bash ./vendor/bin/sail up` on Windows
 or : `./vendor/bin/sail up` on Unix (Linux or Mac OS)
+### config
+The config file is `.env` and it is committed for testing purposes 
+The DB credentials are
+```sh
+DB_DATABASE=weather_app
+DB_USERNAME=sail
+DB_PASSWORD=password
+```
 ### migrate the DB
 The db has two tables `weather_data` (stores the historical weather data) and `locations` (stores the cities)
 The follow command should create the 2 table and seed the locations table with Montreal data as an example
@@ -85,7 +93,36 @@ Then add : `*/30 * * * * php artisan weather:store Montreal`
 
 ### fetch the data manually through an API end-point
 call `http://localhost/api/weather/fetch?location=Montreal`
-
+Example response 
+```json
+{
+	"last_updated_epoch": "2022-01-14T15:30:00+00:00",
+	"location_id": 1,
+	"last_updated": "2022-01-14 10:30",
+	"temp_c": -9,
+	"temp_f": 15.8,
+	"is_day": 1,
+	"condition_text": "Sunny",
+	"condition_icon": "\/\/cdn.weatherapi.com\/weather\/64x64\/day\/113.png",
+	"condition_code": 1000,
+	"wind_mph": 9.4,
+	"wind_kph": 15.1,
+	"wind_degree": 350,
+	"wind_dir": "N",
+	"pressure_mb": 1020,
+	"pressure_in": 30.13,
+	"precip_mm": 0,
+	"precip_in": 0,
+	"humidity": 65,
+	"cloud": 0,
+	"feelslike_c": -15.1,
+	"feelslike_f": 4.9,
+	"uv": 2,
+	"gust_mph": 13.4,
+	"gust_kph": 21.6,
+	"id": 16
+}
+```
 
  
 
